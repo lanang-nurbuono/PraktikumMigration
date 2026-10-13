@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProdukController; // <-- 1. Tambahkan baris ini di atas
 
-// 3.1 Route sederhana (Closure)
+// --- ROUTE PERPUSTAKAAN (KODE LAMA ANDA) ---
 Route::get('/', function () {
     return view('welcome');
 });
@@ -19,7 +20,6 @@ Route::get('/info', fn () => [
     'framework' => 'Laravel 13',
 ]);
 
-// 3.2 Route dengan parameter
 Route::get('/anggota/{nama}', function (string $nama) {
     return "Anggota perpustakaan: {$nama}";
 });
@@ -32,7 +32,6 @@ Route::get('/buku/{kategori}/tahun/{tahun}', function (string $kategori, int $ta
     return "Buku kategori {$kategori} terbitan tahun {$tahun}";
 });
 
-// 3.3 Pembatasan parameter (constraint)
 Route::get('/peminjaman/{id}', function (int $id) {
     return "Detail peminjaman nomor {$id}";
 })->whereNumber('id');
@@ -49,24 +48,29 @@ Route::get('/status/{status}', function (string $status) {
     return "Status peminjaman: {$status}";
 })->whereIn('status', ['dipinjam', 'dikembalikan', 'terlambat']);
 
-// 3.4 Route langsung ke View dan Named Route
 Route::view('/layanan', 'layanan')->name('layanan');
 
 Route::get('/bantuan', function () {
     return view('bantuan', ['telepon' => '(024) 1234567']);
 })->name('bantuan');
 
-// 3.5 Route Group dan Prefix (termasuk tambahan route /petugas/anggota/{id})
 Route::prefix('petugas')->name('petugas.')->group(function () {
     Route::get('/beranda', fn () => 'Beranda Petugas')->name('beranda');
     Route::get('/laporan', fn () => 'Laporan Peminjaman')->name('laporan');
     Route::get('/anggota/{id}', fn ($id) => "Detail Anggota Petugas: {$id}")->name('anggota');
 });
 
-// 3.6 Redirect dan Fallback (Letakkan paling bawah)
 Route::redirect('/home', '/');
 Route::permanentRedirect('/katalog-lama', '/info');
 
+
+// --- 2. TAMBAHKAN ROUTE PRODUK DI SINI (DI ATAS FALLBACK) ---
+Route::get('/produk', [ProdukController::class, 'index'])->name('produk.index');
+Route::get('/produk/{id}', [ProdukController::class, 'show'])->name('produk.show');
+Route::post('/produk', [ProdukController::class, 'store'])->name('produk.store');
+
+
+// --- 3. FALLBACK (HARUS TETAP DI PALING BAWAH) ---
 Route::fallback(function () {
     return response('Maaf, halaman yang Anda cari tidak tersedia.', 404);
 });
