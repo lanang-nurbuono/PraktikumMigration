@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 
 class ProdukController extends Controller
@@ -31,8 +30,6 @@ class ProdukController extends Controller
             'nama'  => 'required|max:100', 
             'harga' => 'required|integer'
         ]);
-
-        // Perbaikan: Menambahkan route tujuan redirect ke 'produk.index'
         return redirect()->route('produk.index')->with('status', 'tersimpan');
     }
 }

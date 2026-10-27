@@ -1,7 +1,4 @@
-@extends('layouts.app')
-@section('title', 'Daftar Produk')
-@section('content')
-
+{("Selamat Datang")}
 <h1>Daftar Produk</h1>
 <table border="1">
     <tr>
