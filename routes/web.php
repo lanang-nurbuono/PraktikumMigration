@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProdukController; // <-- 1. Tambahkan baris ini di atas
+use App\Http\Controllers\ProdukController;
+use App\Http\Controllers\JurusanController;
+use App\Http\Controllers\MatakuliahController;
 
 // --- ROUTE PERPUSTAKAAN (KODE LAMA ANDA) ---
 Route::get('/', function () {
@@ -58,7 +60,8 @@ Route::prefix('petugas')->name('petugas.')->group(function () {
     Route::get('/beranda', fn () => 'Beranda Petugas')->name('beranda');
     Route::get('/laporan', fn () => 'Laporan Peminjaman')->name('laporan');
     Route::get('/anggota/{id}', fn ($id) => "Detail Anggota Petugas: {$id}")->name('anggota');
-});
+
+    });
 
 Route::redirect('/home', '/');
 Route::permanentRedirect('/katalog-lama', '/info');
@@ -68,7 +71,17 @@ Route::permanentRedirect('/katalog-lama', '/info');
 Route::get('/produk', [ProdukController::class, 'index'])->name('produk.index');
 Route::get('/produk/{id}', [ProdukController::class, 'show'])->name('produk.show');
 Route::post('/produk', [ProdukController::class, 'store'])->name('produk.store');
+Route::get('/jurusan/create',[JurusanController::class,'create'])->name('jurusan.create');
+Route::get('/jurusan', [JurusanController::class, 'index'])->name('jurusan.index');
+Route::post('/jurusan', [JurusanController::class, 'store'])->name('jurusan.store');
+//Route::get('/jurusan', [JurusanController::class, 'index']);
+Route::get('/jurusan/{id}', [JurusanController::class, 'show']);
 
+//route matakuliah
+Route::get('/matakuliah/create', [MatakuliahController::class, 'create'])->name('matakuliah.create');
+Route::post('/matakuliah', [MatakuliahController::class, 'store'])->name('matakuliah.store');
+Route::get('/matakuliah', [MatakuliahController::class, 'index'])->name('matakuliah.index');
+Route::get('/matakuliah/{id}', [MatakuliahController::class, 'show'])->name('matakuliah.show');
 
 // --- 3. FALLBACK (HARUS TETAP DI PALING BAWAH) ---
 Route::fallback(function () {
